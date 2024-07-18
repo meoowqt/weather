@@ -37,6 +37,7 @@ def get_coordinates(city_name):
             }
     return None
 
+
 def decode_weather_code(code):
     codes = {
         0: "Ясное небо",
@@ -66,23 +67,23 @@ def decode_weather_code(code):
         86: "Сильные снежные ливни",
         95: "Гроза",
         96: "Гроза с градом",
-        99: "Сильная гроза с градом"
+        99: "Сильная гроза с градом",
     }
     return codes.get(code, "Неизвестный код погоды")
 
+
 def get_weather(latitude, longitude, city):
     response = requests.get(
-        f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true"
+        f"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,apparent_temperature,precipitation,weather_code"
     )
     if response.status_code == 200:
         weather_data = response.json()
         weather = {
             "city": city,
-            "temperature": weather_data["current_weather"]["temperature"],
-            "precipitation": weather_data["current_weather"].get(
-                "precipitation", "N/A"
-            ),
-            "weather": decode_weather_code(weather_data["current_weather"].get("weathercode", "N/A")),
+            "temperature": weather_data["current"]["temperature_2m"],
+            "precipitation": str(int(weather_data["current"].get("precipitation", "N/A"))*100),
+            "feel_like": weather_data["current"]["apparent_temperature"],
+            "weather": decode_weather_code(weather_data["current"].get("weather_code")),
         }
         return weather
     return None

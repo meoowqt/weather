@@ -18,7 +18,7 @@
 <body>
     <section class="vh-100 back">
         <div class="container py-5 h-100 ">
-            <form method="post"> 
+          <form method="post"> 
           <div class="row d-flex justify-content-center align-items-center h-100">
             
             <div class="col-md-8 col-lg-6 col-xl-4">
@@ -36,13 +36,12 @@
                   <div class="card-body p-4">
         
                     <h4 class="mb-1 sfw-normal">{{weather_data.city}}</h4>
-                    <p class="mb-2">Температура: <strong>{{weather_data.temperature}}</strong></p>
-                    <p>Вероятность осадков: <strong>{{weather_data.precipitation}}</strong></p>
-        
+                    <p class="mb-2">Температура: <strong>{{weather_data.temperature}}°C</strong></p>
+                    <p class="mb-2">Ощущается как: <strong>{{weather_data.feel_like}}°C</strong></p>
+                    <p class="mb-2">Вероятность осадков: <strong>{{weather_data.precipitation}}%</strong></p>
                     <div class="d-flex flex-row align-items-center">
                       <p class="mb-0 me-4">{{weather_data.weather}}</p>
                     </div>
-        
                   </div>
                 </div>
             {% endif %}
