@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import requests
 
@@ -21,7 +21,7 @@ class Search(db.Model):
 with app.app_context():
     db.create_all()
 
-app.secret_key = "NOSECRET;("
+app.secret_key = "NOSECRET"
 API_NINJAS_KEY = "19XnYwxNhqsNSVecc07O5g==ITo85sc4hjl01O0o"
 
 
@@ -42,12 +42,15 @@ def index():
                 db.session.add(search)
             db.session.commit()
             searches = Search.query.order_by(Search.count.desc()).all()
+            session["last_city"] = city_name
             return render_template(
                 "index.html", weather_data=weather_data, searches=searches
             )
         else:
-            return render_template("index.html", error="Город не найден")
-    return render_template("index.html", searches=searches)
+            flash("Город не найден", "error")
+    searches = Search.query.order_by(Search.count.desc()).all()
+    last_city = session.get("last_city", None)
+    return render_template("index.html", searches=searches, last_city=last_city)
 
 
 def get_coordinates(city_name):

@@ -12,7 +12,6 @@
             background-image: url('static/background.png');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
         }
     </style>
 </head>
@@ -25,12 +24,15 @@
                     <form method="post"> 
                         <div class="input-group rounded mb-3">
                             <input type="search" class="form-control rounded" placeholder="Город" aria-label="Поиск" 
-                            aria-describedby="search-addon" name="city" required/>
+                            aria-describedby="search-addon" name="city" required autocomplete="on"/>
                             <button type="submit" class="input-group-text border-0 fw-bold" id="search-addon">
                                 Поиск
                             </button>   
                         </div>
                     </form>
+                    {% if last_city %}
+                        <p>Вы уже смотрели погоду в городе <strong>{{ last_city }}</strong>. Хотите посмотреть снова?</p>
+                    {% endif %}
                     {% if weather_data %}
                         <div class="card shadow-0 border">
                             <div class="card-body p-4">
@@ -57,6 +59,7 @@
                             </div>
                         {% endfor %}
                     {% else %}
+                    
                         <h4 class="mb-1 sfw-normal">История поиска пуста</h4>
                     {% endif %}
                 </div>
