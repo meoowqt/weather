@@ -2,3 +2,4 @@
 /.vscode
 /__pycache__/
 instance/weather.db
+.pytest_cache
