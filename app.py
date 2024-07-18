@@ -4,6 +4,23 @@ import requests
 
 app = Flask(__name__)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///weather.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy(app)
+
+
+class Search(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    city = db.Column(db.String(100), nullable=False)
+    count = db.Column(db.Integer, default=1)
+
+    def __repr__(self) -> str:
+        return f"History {self.city}"
+
+
+with app.app_context():
+    db.create_all()
+
 app.secret_key = "NOSECRET;("
 API_NINJAS_KEY = "19XnYwxNhqsNSVecc07O5g==ITo85sc4hjl01O0o"
 
@@ -17,10 +34,20 @@ def index():
             weather_data = get_weather(
                 coordinates["latitude"], coordinates["longitude"], city_name
             )
-            return render_template("index.html", weather_data=weather_data)
+            search = Search.query.filter_by(city=city_name).first()
+            if search:
+                search.count += 1
+            else:
+                search = Search(city=city_name)
+                db.session.add(search)
+            db.session.commit()
+            searches = Search.query.order_by(Search.count.desc()).all()
+            return render_template(
+                "index.html", weather_data=weather_data, searches=searches
+            )
         else:
-            return render_template("index.html", error="City not found")
-    return render_template("index.html")
+            return render_template("index.html", error="Город не найден")
+    return render_template("index.html", searches=searches)
 
 
 def get_coordinates(city_name):
@@ -81,7 +108,9 @@ def get_weather(latitude, longitude, city):
         weather = {
             "city": city,
             "temperature": weather_data["current"]["temperature_2m"],
-            "precipitation": str(int(weather_data["current"].get("precipitation", "N/A"))*100),
+            "precipitation": str(
+                int(weather_data["current"].get("precipitation", "N/A")) * 100
+            ),
             "feel_like": weather_data["current"]["apparent_temperature"],
             "weather": decode_weather_code(weather_data["current"].get("weather_code")),
         }

@@ -20,8 +20,8 @@
         <div class="container py-5 h-100 ">
           <form method="post"> 
           <div class="row d-flex justify-content-center align-items-center h-100">
-            
             <div class="col-md-8 col-lg-6 col-xl-4">
+              <h3 class="mb-4 pb-2 fw-normal">Узнать погоду в городе</h3>
               <div class="input-group rounded mb-3">
                 <input type="search" class="form-control rounded" placeholder="Город" aria-label="Поиск" 
                 aria-describedby="search-addon" name="city" required/>
@@ -45,10 +45,24 @@
                   </div>
                 </div>
             {% endif %}
+            <h3 class="mt-4 pb-2 fw-normal">История поиска</h3>
+            <div class="mb-4 pb-2">
+              {% if searches %}
+              {% for search in searches %}
+              <div class="card shadow-0 border">
+                <div class="card-body p-4">
+                  <h4 class="mb-1 sfw-normal">{{search.city}}</h4>
+                  <p class="mb-2">Количество раз: <strong>{{search.count}} раз(а)</strong></p>
+                </div>
+              </div>
+              {% endfor %}
+              {% else %}
+              <h4 class="mb-1 sfw-normal">История поиска пуста</h4>
+              {% endif %}
             </div>
           </div>
-      
         </div>
+      </div>
       </section>
 </body>
 </html>
