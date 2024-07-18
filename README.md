@@ -29,7 +29,7 @@
 1. **Клонирование репозитория**:
    ```bash
    git clone https://github.com/meoowqt/weather.git
-   cd your-repo
+   cd weather
    ```
 
 2. **Сборка Docker образа**:
